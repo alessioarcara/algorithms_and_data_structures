@@ -1,4 +1,4 @@
-package LinkedList;
+package Containers;
 
 /**
  * List bidirectional, circular, with sentinel

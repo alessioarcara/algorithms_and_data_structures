@@ -1,4 +1,4 @@
-package LinkedList;
+package Containers;
 
 public class Node<T> {
     Node<T> succ;

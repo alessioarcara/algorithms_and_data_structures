@@ -1,4 +1,4 @@
-package LinkedList;
+package Containers;
 
 public class ArrayList<T> {
     private int size = 0;
@@ -37,13 +37,19 @@ public class ArrayList<T> {
     }
 
     public void add(T value, int index) {
-
+        if (size == array.length) {
+            doubleStorage();
+        }
+        System.arraycopy(array, index,
+                array, index + 1, size++ - index);
+        array[index] = value;
     }
 
     public T remove(int index) {
         checkIndex(index);
         T oldValue = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        System.arraycopy(array, index + 1,
+                array, index, size - index);
         array[size--] = null;
         return oldValue;
     }
