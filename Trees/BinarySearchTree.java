@@ -3,9 +3,7 @@ package Trees;
 public class BinarySearchTree<K extends Comparable<? super K>, V> implements Comparable<K> {
     private K key;
     private V value;
-    private BinarySearchTree<K, V> parent;
-    private BinarySearchTree<K, V> left;
-    private BinarySearchTree<K, V> right;
+    private BinarySearchTree<K, V> parent, left, right;
 
     public BinarySearchTree(K key, V value) {
         this.value = value;
@@ -24,6 +22,10 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements Com
 
     public K getKey() {
         return key;
+    }
+
+    public BinarySearchTree<K, V> getParent() {
+        return parent;
     }
 
     public BinarySearchTree<K, V> getLeft() {
@@ -62,17 +64,17 @@ public class BinarySearchTree<K extends Comparable<? super K>, V> implements Com
         if (u != null && u.key == key) {
             u.value = value;
         } else {
-            BinarySearchTree<K, V> newTree = new BinarySearchTree<>(key, value);
-            link(p, newTree, key);
+            BinarySearchTree<K, V> n = new BinarySearchTree<>(key, value);
+            link(p, n, key);
             if (p == null) {
-                t = newTree;
+                t = n;
             }
         }
 
         return t;
     }
 
-    public static <K extends Comparable<? super K>, V> void link(BinarySearchTree<K, V> p, BinarySearchTree<K, V> u,
+    private static <K extends Comparable<? super K>, V> void link(BinarySearchTree<K, V> p, BinarySearchTree<K, V> u,
             K key) {
         if (u != null) {
             u.parent = p;

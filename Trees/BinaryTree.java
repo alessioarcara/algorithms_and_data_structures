@@ -2,18 +2,22 @@ package Trees;
 
 import Containers.ListQueue;
 
-public class BinaryTree<T> extends Tree<T> {
-    private BinaryTree<T> left;
-    private BinaryTree<T> right;
+public class BinaryTree<T> {
+    private T value;
+    private BinaryTree<T> parent, left, right;
 
     public BinaryTree(T value) {
-        super(value);
+        this.value = value;
         this.parent = null;
         this.left = null;
         this.right = null;
     }
 
-    public Tree<T> getParent() {
+    public T getValue() {
+        return value;
+    }
+
+    public BinaryTree<T> getParent() {
         return parent;
     }
 

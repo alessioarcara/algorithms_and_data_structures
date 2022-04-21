@@ -2,18 +2,26 @@ package Trees;
 
 import Containers.ListQueue;
 
-public class GenericTree<T> extends Tree<T> {
-    private GenericTree<T> child;
-    private GenericTree<T> sibling;
+public class GenericTree<T> {
+    private T value;
+    private GenericTree<T> parent, child, sibling;
 
     public GenericTree(T value) {
-        super(value);
+        this.value = value;
         this.parent = null;
         this.child = null;
         this.sibling = null;
     }
 
-    public Tree<T> getParent() {
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public GenericTree<T> getParent() {
         return parent;
     }
 

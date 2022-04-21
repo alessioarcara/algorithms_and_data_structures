@@ -6,10 +6,11 @@ interface Callable<T> {
 
 public abstract class Tree<T> {
     protected Tree<T> parent;
-    private T value;
+    protected T value;
 
     Tree(T value) {
         this.value = value;
+        this.parent = null;
     }
 
     public T getValue() {
@@ -18,5 +19,9 @@ public abstract class Tree<T> {
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    public Tree<T> getParent() {
+        return parent;
     }
 }
