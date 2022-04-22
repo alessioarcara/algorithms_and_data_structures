@@ -1,6 +1,5 @@
 package Dictionary;
 
-import Trees.BinarySearchTree;
 import Trees.RedBlackTree;
 
 /**
