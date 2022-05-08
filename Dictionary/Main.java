@@ -2,23 +2,27 @@ package Dictionary;
 
 public class Main {
     public static void main(String[] args) {
-        TreeDictionary<Integer, Integer> dict = new TreeDictionary<>();
-        dict.insert(30, 1);
-        dict.insert(15, 2);
-        dict.insert(70, 3);
-        dict.insert(10, 4);
-        dict.insert(20, 5);
-        dict.insert(60, 6);
-        dict.insert(85, 7);
-        dict.insert(80, 8);
-        dict.insert(90, 9);
-        dict.insert(50, 10);
-        dict.insert(65, 11);
-        dict.insert(40, 12);
-        dict.insert(55, 13);
-        // dict.insert(11, 14);
+        TreeDictionary<Integer, Integer> treeDict = new TreeDictionary<>();
+        treeDict.insert(30, 1);
+        treeDict.insert(15, 2);
+        treeDict.insert(70, 3);
+        treeDict.insert(10, 4);
+        treeDict.insert(20, 5);
+        treeDict.insert(60, 6);
+        treeDict.insert(85, 7);
+        treeDict.insert(80, 8);
+        treeDict.insert(90, 9);
+        treeDict.insert(50, 10);
+        treeDict.insert(65, 11);
+        treeDict.insert(40, 12);
+        treeDict.insert(55, 13);
+        // treeDict.printAll();
 
-        dict.printAll();
+        HashDictionary<Integer> hashDict = new HashDictionary<>();
+        hashDict.insert("alberto", 10);
+        hashDict.insert("alessio", 15);
+        hashDict.insert("roberto", 20);
+        hashDict.printAll();
     }
 
 }
