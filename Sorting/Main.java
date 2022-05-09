@@ -1,5 +1,7 @@
 package Sorting;
 
+import java.util.Random;
+
 interface Callable {
     void call();
 }
@@ -24,16 +26,21 @@ public class Main {
             System.exit(1);
         }
 
+        Random rnd = new Random();
+
         int n = Integer.parseInt(args[0]);
 
         Main main = new Main();
         int[] A = new int[n];
 
         for (int i = 0; i < A.length; i++) {
-            A[i] = n--;
+            A[i] = rnd.nextInt(1000);
         }
+        int[] B = A.clone();
+        int[] C = B.clone();
 
         main.calcTime(() -> QuickSort.sort(A), "Quick");
-        main.calcTime(() -> MergeSort.sort(A), "Merge");
+        main.calcTime(() -> MergeSort.sort(B), "Merge");
+        main.calcTime(() -> HeapSort.sort(C), "Heap");
     }
 }

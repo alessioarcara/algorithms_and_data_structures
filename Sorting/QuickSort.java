@@ -2,18 +2,14 @@ package Sorting;
 
 import java.util.Random;
 
-public class QuickSort {
-    private static void swap(int arr[], int a, int b) {
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
-    }
+import Utils.Utils;
 
+public class QuickSort {
     private static void shuffle(int arr[]) {
         Random rnd = new Random();
         for (int i = arr.length - 1; i > 0; i--) {
             int j = rnd.nextInt(i + 1);
-            swap(arr, i, j);
+            Utils.swap(arr, i, j);
         }
     }
 
@@ -37,10 +33,10 @@ public class QuickSort {
         for (int i = l; i < r; i++) {
             if (arr[i] < arr[p]) {
                 j++;
-                swap(arr, i, j);
+                Utils.swap(arr, i, j);
             }
         }
-        swap(arr, p, j);
+        Utils.swap(arr, p, j);
         return j;
     }
 }
