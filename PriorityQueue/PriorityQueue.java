@@ -76,10 +76,14 @@ public class PriorityQueue<T> {
         }
     }
 
+    /**
+     * Al decrementare di una priorità, si ripristina la posizione corretta
+     * se la priorità del figlio è minore rispetto a quella del padre si scambiano
+     */
     public void decrease(PriorityItem<T> x, int p) {
         if (p < x.getPriority()) {
             x.setPriority(p);
-            int i = x.getPos();
+            int i = x.getPos(); //
             while (i > 0 && H[i].getPriority() < H[p(i)].getPriority()) {
                 PriorityItem.swap(H, i, p(i));
                 i = p(i);
