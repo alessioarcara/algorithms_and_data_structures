@@ -15,7 +15,6 @@ public class Main {
         priorityQueue.insert("Emanuele", 5);
         priorityQueue.decrease(item, 1);
         System.out.println(priorityQueue.min());
-        priorityQueue.insert("Giovanni", 33);
         priorityQueue.printAll();
     }
 }

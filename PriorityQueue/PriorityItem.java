@@ -8,7 +8,8 @@ public class PriorityItem<T> {
     public PriorityItem(int priority, T value, int pos) {
         this.priority = priority;
         this.value = value;
-        this.pos = pos; // Posizione nel vettore heap
+        this.pos = pos; // Posizione attuale del record all'interno del vettore
+                        // informazione necessaria per realizzare decrease()
     }
 
     public static <T> void swap(PriorityItem<T>[] H, int i, int j) {
