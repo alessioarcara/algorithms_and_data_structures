@@ -23,8 +23,9 @@ class Graph:
 
 
 graph = Graph()
+
 for u, v in [('a', 'b'), ('a', 'd'), ('b', 'c'), ('d', 'a'), ('d', 'c'), ('d', 'e'), ('e', 'c')]:
     graph.insertEdge(u, v)
 
 for u in graph.V():
-    print(u, '->', graph.adj)
+    print(u, '->', graph.adj(u))

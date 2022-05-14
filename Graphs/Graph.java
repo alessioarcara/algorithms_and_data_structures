@@ -34,4 +34,8 @@ public class Graph<K, V> {
         insertNode(v);
         vertexes.get(u).put(v, w);
     }
+
+    public V getWeight(K u, K v) {
+        return vertexes.get(u).get(v);
+    }
 }

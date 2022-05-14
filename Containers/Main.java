@@ -2,7 +2,7 @@ package Containers;
 
 public class Main {
     public static void main(String[] args) {
-        // LinkedList<String> linkedList = new LinkedList<String>();
+        LinkedList<String> linkedList = new LinkedList<String>();
         // ArrayList<Integer> arrayList = new ArrayList<Integer>(5);
         // VectorStack<Integer> stack = new VectorStack<Integer>(10);
         // stack.push(5);

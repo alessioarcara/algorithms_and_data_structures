@@ -26,6 +26,10 @@ public class ListStack<T> {
     }
 
     public void push(T value) {
-        linkedList.append(value);
+        linkedList.insert(linkedList.head(), value);
+    }
+
+    public void printAll() {
+        linkedList.printAll(linkedList.head());
     }
 }

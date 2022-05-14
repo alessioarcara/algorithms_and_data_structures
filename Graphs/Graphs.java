@@ -3,6 +3,7 @@ package Graphs;
 import java.util.HashMap;
 
 import Containers.ListQueue;
+import Containers.ListStack;
 import Sets.Sets;
 
 /**
@@ -121,5 +122,56 @@ public class Graphs {
                 return true;
         S.finish.put(u, ++S.time);
         return false;
+    }
+
+    public static <K, V> ListStack<K> topSort(Graph<K, V> G) {
+        ListStack<K> S = new ListStack<>();
+        HashMap<K, Boolean> visited = new HashMap<>();
+        for (K u : G.Vertexes())
+            visited.put(u, false);
+        for (K u : G.Vertexes())
+            if (!visited.get(u))
+                tsDfs(G, u, visited, S);
+        return S;
+    }
+
+    private static <K, V> void tsDfs(Graph<K, V> G, K u, HashMap<K, Boolean> visited, ListStack<K> S) {
+        visited.put(u, true);
+        for (K v : G.adj(u))
+            if (!visited.get(v))
+                tsDfs(G, v, visited, S);
+        S.push(u);
+    }
+
+    /**
+     * Algorithm to find strongly connected components of a directed graph
+     */
+    public static <K, V> HashMap<K, Integer> kosaraju(Graph<K, V> G) {
+        ListStack<K> S = topSort(G);
+        Graph<K, V> G_t = transpose(G);
+        return scc(G_t, S);
+    }
+
+    private static <K, V> Graph<K, V> transpose(Graph<K, V> G) {
+        Graph<K, V> G_t = new Graph<>();
+        for (K u : G.Vertexes())
+            G_t.insertNode(u);
+        for (K u : G.Vertexes())
+            for (K v : G.adj(u))
+                G_t.insertEdge(v, u, G.getWeight(u, v));
+        return G_t;
+    }
+
+    private static <K, V> HashMap<K, Integer> scc(Graph<K, V> G, ListStack<K> S) {
+        HashMap<K, Integer> id = new HashMap<>();
+        for (K u : G.Vertexes())
+            id.put(u, 0);
+        int counter = 0;
+        for (K u : G.Vertexes())
+            if (id.get(u) == 0) {
+                counter = counter + 1;
+                ccdfs(G, counter, u, id);
+            }
+        return id;
     }
 }

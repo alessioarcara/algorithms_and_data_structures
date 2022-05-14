@@ -1,8 +1,5 @@
 package Sorting;
 
-import java.util.Arrays;
-import java.util.Random;
-
 interface Callable {
     void call();
 }
@@ -26,8 +23,6 @@ public class Main {
             System.err.println("Usage: java main <list length>");
             System.exit(1);
         }
-
-        Random rnd = new Random();
 
         int n = Integer.parseInt(args[0]);
 
