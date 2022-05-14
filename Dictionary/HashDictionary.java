@@ -8,8 +8,8 @@ import Hashing.Hash;
 public class HashDictionary<V> {
     Hash<V> hash;
 
-    public HashDictionary() {
-        hash = new Hash<>(5);
+    public HashDictionary(int initialCapacity) {
+        hash = new Hash<>(initialCapacity);
     }
 
     public V lookup(String key) {

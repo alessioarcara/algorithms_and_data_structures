@@ -18,7 +18,7 @@ public class Main {
         treeDict.insert(55, 13);
         // treeDict.printAll();
 
-        HashDictionary<Integer> hashDict = new HashDictionary<>();
+        HashDictionary<Integer> hashDict = new HashDictionary<>(5);
         hashDict.insert("alberto", 10);
         hashDict.insert("alessio", 15);
         hashDict.insert("roberto", 20);

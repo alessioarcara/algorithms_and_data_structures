@@ -1,5 +1,6 @@
 package Sorting;
 
+import java.util.Arrays;
 import java.util.Random;
 
 interface Callable {
@@ -34,7 +35,7 @@ public class Main {
         int[] A = new int[n];
 
         for (int i = 0; i < A.length; i++) {
-            A[i] = rnd.nextInt(1000);
+            A[i] = A.length - i;
         }
         int[] B = A.clone();
         int[] C = B.clone();
