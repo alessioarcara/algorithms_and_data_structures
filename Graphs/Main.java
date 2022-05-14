@@ -46,9 +46,11 @@ public class Main {
         graph.insertEdge("f", "v", 0);
 
         graph2.insertEdge("a", "b", 0);
-        graph2.insertEdge("b", "c", 0);
         graph2.insertEdge("b", "a", 0);
-        // graph2.insertEdge("c", "a", 0);
+        graph2.insertEdge("b", "c", 0);
+        graph2.insertEdge("c", "b", 0);
+        graph2.insertEdge("a", "c", 0);
+        // graph2.insertEdge("c", "b", 0);
 
         for (String u : graph.Vertexes()) {
             System.out.println(u + " -> " + graph.adj(u).toString());
@@ -71,6 +73,6 @@ public class Main {
 
         System.out.println(Graphs.cc(graph).toString());
 
-        System.out.println("Il grafo ha un ciclo: " + Graphs.hasCycle(graph2));
+        System.out.println("Il grafo ha un ciclo: " + Graphs.hasCycle(graph));
     }
 }

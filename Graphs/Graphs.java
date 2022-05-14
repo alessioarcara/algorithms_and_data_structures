@@ -96,35 +96,7 @@ public class Graphs {
                 ccdfs(G, counter, v, id);
     }
 
-    /**
-     * Only for undirected graphs
-     */
     public static <K, V> boolean hasCycle(Graph<K, V> G) {
-        HashMap<K, Boolean> visited = new HashMap<>();
-        for (K u : G.Vertexes())
-            visited.put(u, false);
-
-        for (K u : G.Vertexes())
-            if (!visited.get(u))
-                if (hasCycleRec(G, u, null, visited))
-                    return true;
-        return false;
-    }
-
-    private static <K, V> boolean hasCycleRec(Graph<K, V> G, K u, K p, HashMap<K, Boolean> visited) {
-        visited.put(u, true);
-        for (K v : Sets.remove(G.adj(u), p))
-            if (visited.get(v))
-                return true;
-            else if (hasCycleRec(G, v, u, visited))
-                return true;
-        return false;
-    }
-
-    /**
-     * Only for directed graphs
-     */
-    public static <K, V> boolean hasDirectedGraphCycle(Graph<K, V> G) {
         SchemaDFS<K> S = new SchemaDFS<>();
 
         for (K u : G.Vertexes()) {
@@ -133,17 +105,18 @@ public class Graphs {
         }
         for (K u : G.Vertexes())
             if (S.discover.get(u) == 0)
-                if (hasDirectedGraphCycleRec(G, u, S))
+                if (hasCycleRec(G, u, null, S))
                     return true;
         return false;
     }
 
-    private static <K, V> boolean hasDirectedGraphCycleRec(Graph<K, V> G, K u, SchemaDFS<K> S) {
+    private static <K, V> boolean hasCycleRec(Graph<K, V> G, K u, K p, SchemaDFS<K> S) {
         S.discover.put(u, ++S.time);
-        for (K v : G.adj(u))
+        for (K v : Sets.remove(G.adj(u), p))
             if (S.discover.get(v) == 0) {
-                if (hasDirectedGraphCycleRec(G, v, S))
+                if (hasCycleRec(G, v, u, S))
                     return true;
+                // arco all'indietro
             } else if (S.discover.get(u) > S.discover.get(v) && S.finish.get(v) == 0)
                 return true;
         S.finish.put(u, ++S.time);
