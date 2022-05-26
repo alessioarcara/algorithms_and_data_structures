@@ -24,6 +24,10 @@ public class PriorityQueue<T> {
         return (i - 1) / 2;
     }
 
+    public boolean isEmpty() {
+        return dim == 0;
+    }
+
     public PriorityItem<T> insert(T x, int p) {
         if (dim < capacity) {
             H[dim] = new PriorityItem<T>(p, x, dim);

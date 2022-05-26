@@ -6,16 +6,15 @@ public class ArrayList<T> {
 
     @SuppressWarnings("unchecked")
     ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
+        if (initialCapacity > 0)
             array = (T[]) new Object[initialCapacity];
-        } else {
+        else
             throw new IllegalArgumentException("Illegal Capacity " + initialCapacity);
-        }
     }
 
     @SuppressWarnings("unchecked")
-    private void doubleStorage() {
-        T[] newArray = (T[]) new Object[2 * array.length];
+    private void alterCapacity(int howMuch) {
+        T[] newArray = (T[]) new Object[howMuch * array.length];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
@@ -30,16 +29,14 @@ public class ArrayList<T> {
     }
 
     public void add(T value) {
-        if (size == array.length) {
-            doubleStorage();
-        }
+        if (size == array.length)
+            alterCapacity(2);
         array[size++] = value;
     }
 
     public void add(T value, int index) {
-        if (size == array.length) {
-            doubleStorage();
-        }
+        if (size == array.length)
+            alterCapacity(2);
         System.arraycopy(array, index,
                 array, index + 1, size++ - index);
         array[index] = value;
@@ -60,8 +57,7 @@ public class ArrayList<T> {
     }
 
     public void printAll() {
-        for (Object object : array) {
+        for (Object object : array)
             System.out.print(object + " ");
-        }
     }
 }

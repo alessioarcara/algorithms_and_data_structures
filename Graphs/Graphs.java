@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import Containers.ListQueue;
 import Containers.ListStack;
+import PriorityQueue.PriorityItem;
+import PriorityQueue.PriorityQueue;
 import Sets.Sets;
 
 /**
@@ -62,6 +64,30 @@ public class Graphs {
             printPath(r, parent.get(s), parent);
             System.out.println(s);
         }
+    }
+
+    public static <K, V> HashMap<K, Integer> allShortestPaths(Graph<K, V> G, K r) {
+        ListQueue<K> Q = new ListQueue<>();
+        Q.enqueue(r);
+        HashMap<K, Boolean> visited = new HashMap<>();
+        HashMap<K, Integer> paths = new HashMap<>();
+        for (K u : G.Vertexes()) {
+            visited.put(u, false);
+            paths.put(u, 0);
+        }
+        visited.put(r, true);
+        paths.put(r, 1);
+        while (!Q.isEmpty()) {
+            K u = Q.dequeue();
+            for (K v : G.adj(u)) {
+                paths.put(v, paths.get(v) + 1);
+                if (!visited.get(v)) {
+                    visited.put(v, true);
+                    Q.enqueue(v);
+                }
+            }
+        }
+        return paths;
     }
 
     public static <K, V> void dfs(Graph<K, V> G, K u, HashMap<K, Boolean> visited) {
@@ -173,5 +199,102 @@ public class Graphs {
                 ccdfs(G, counter, u, id);
             }
         return id;
+    }
+
+    public static <K, V> HashMap<K, K> prim(Graph<K, V> G, K s) {
+        final int n = G.Vertexes().size();
+
+        PriorityQueue<K> Q = new PriorityQueue<>(n);
+        HashMap<K, PriorityItem<K>> d = new HashMap<>(n);
+        HashMap<K, K> p = new HashMap<>(n);
+
+        for (K u : Sets.remove(G.Vertexes(), s))
+            d.put(u, Q.insert(u, Integer.MAX_VALUE));
+
+        d.put(s, Q.insert(s, 0));
+        p.put(s, s);
+
+        while (!Q.isEmpty()) {
+            K u = Q.deleteMin();
+            d.put(u, null);
+            for (K v : G.adj(u)) {
+                if (d.get(v) != null && (int) G.getWeight(u, v) < d.get(v).getPriority()) {
+                    Q.decrease(d.get(v), (int) G.getWeight(u, v));
+                    p.put(v, u);
+                }
+            }
+        }
+        return p;
+    }
+
+    public static <K, V> HashMap<K, K> bellmanFordMoore(Graph<K, V> G, K s) {
+        final int n = G.Vertexes().size();
+
+        HashMap<K, Integer> d = new HashMap<>(n);
+        HashMap<K, K> T = new HashMap<>(n);
+        HashMap<K, Boolean> b = new HashMap<>(n);
+
+        for (K u : Sets.remove(G.Vertexes(), s)) {
+            T.put(u, null);
+            d.put(u, Integer.MAX_VALUE);
+            b.put(u, false);
+        }
+
+        T.put(s, null);
+        d.put(s, 0);
+        b.put(s, true);
+
+        ListQueue<K> Q = new ListQueue<>();
+        Q.enqueue(s);
+
+        while (!Q.isEmpty()) {
+            K u = Q.dequeue();
+            b.put(u, false);
+            for (K v : G.adj(u)) {
+                if (d.get(u) + (int) G.getWeight(u, v) < d.get(v)) {
+                    if (!b.get(u)) {
+                        Q.enqueue(v);
+                        b.put(v, true);
+                    }
+                    T.put(v, u);
+                    d.put(v, d.get(u) + (int) G.getWeight(u, v));
+                }
+            }
+        }
+
+        return T;
+    }
+
+    public static <K, V> HashMap<K, PriorityItem<K>> dijkstra(Graph<K, V> G, K s) {
+        final int n = G.Vertexes().size();
+
+        HashMap<K, PriorityItem<K>> d = new HashMap<>(n);
+        HashMap<K, K> T = new HashMap<>(n);
+        HashMap<K, Boolean> b = new HashMap<>(n);
+
+        PriorityQueue<K> Q = new PriorityQueue<>(n);
+
+        for (K u : G.Vertexes()) {
+            if (u == s) {
+                d.put(u, Q.insert(u, 0));
+                T.put(s, s);
+            } else {
+                d.put(u, Q.insert(u, Integer.MAX_VALUE));
+                b.put(u, false);
+            }
+        }
+
+        while (!Q.isEmpty()) {
+            K u = Q.deleteMin();
+            b.put(u, true);
+            for (K v : G.adj(u)) {
+                final int sum = d.get(u).getPriority() + (int) G.getWeight(u, v);
+                if (!b.get(v) && sum < d.get(v).getPriority()) {
+                    Q.decrease(d.get(v), sum);
+                    T.put(v, u);
+                }
+            }
+        }
+        return d;
     }
 }

@@ -3,6 +3,7 @@ package Graphs;
 import java.util.HashMap;
 
 import Containers.ListStack;
+import PriorityQueue.PriorityItem;
 
 public class Main {
 
@@ -27,6 +28,7 @@ public class Main {
     public static void main(String[] args) {
         Graph<String, Integer> graph = new Graph<>();
         Graph<String, Integer> graph2 = new Graph<>();
+        Graph<String, Integer> graph3 = new Graph<>();
 
         Pair[] edges = {
                 new Pair("a", "b"),
@@ -44,11 +46,20 @@ public class Main {
             graph.insertEdge(pair.getFirst(), pair.getSecond(), 0);
         }
 
-        graph2.insertEdge("a", "b", 0);
-        graph2.insertEdge("b", "a", 0);
-        graph2.insertEdge("b", "c", 0);
-        graph2.insertEdge("c", "b", 0);
-        graph2.insertEdge("a", "c", 0);
+        graph2.insertEdge("a", "b", 4);
+        graph2.insertEdge("b", "a", 4);
+        graph2.insertEdge("b", "c", 4);
+        graph2.insertEdge("c", "b", 16);
+        graph2.insertEdge("c", "a", 20);
+        graph2.insertEdge("a", "c", 20);
+
+        graph3.insertEdge("a", "b", 0);
+        graph3.insertEdge("a", "c", 0);
+        graph3.insertEdge("b", "c", 0);
+        graph3.insertEdge("c", "d", 0);
+        graph3.insertEdge("b", "e", 0);
+        graph3.insertEdge("c", "e", 0);
+        graph3.insertEdge("d", "e", 0);
 
         for (String u : graph.Vertexes()) {
             System.out.println(u + " -> " + graph.adj(u).toString());
@@ -99,6 +110,26 @@ public class Main {
             ListStack<String> S = Graphs.topSort(graph);
             System.out.print("L'ordine dei nodi: ");
             S.printAll();
+        }
+
+        /**
+         * All shortest paths (Exercize)
+         */
+        System.out.println(Graphs.allShortestPaths(graph3, "a"));
+
+        /**
+         * Prim
+         */
+
+        System.out.println(Graphs.prim(graph2, "a").toString());
+
+        /**
+         * Bellman Ford
+         */
+
+        HashMap<String, PriorityItem<String>> distanceMap = Graphs.dijkstra(graph2, "a");
+        for (PriorityItem<String> distance : distanceMap.values()) {
+            System.out.println(distance.getPriority());
         }
     }
 }

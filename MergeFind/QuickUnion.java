@@ -1,10 +1,10 @@
-package Mfset;
+package MergeFind;
 
-public class Mfset {
+public class QuickUnion {
     private int[] p;
     private int[] rank;
 
-    public Mfset(int initialCapacity) {
+    public QuickUnion(int initialCapacity) {
         if (initialCapacity > 0) {
             // ogni elemento punta se stesso -> n insiemi disgiunti
             p = new int[initialCapacity];
