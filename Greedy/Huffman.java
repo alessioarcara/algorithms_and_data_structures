@@ -4,23 +4,30 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import PriorityQueue.PriorityQueue;
-import Trees.BinaryTree;
 
 public class Huffman {
     String s;
     HashMap<Character, Integer> freq;
-    BinaryTree<TreeNode> huffmanTree;
+    TreeNode huffmanTree;
     HashMap<Character, String> codes = new HashMap<>();
     int dim = 0;
 
     private class TreeNode {
         Character c;
         Integer f;
+        TreeNode l, r;
 
-        public TreeNode(Integer f, Character c) {
+        TreeNode(Integer f, Character c) {
             this.c = c;
             this.f = f;
+            this.l = null;
+            this.r = null;
         }
+
+        boolean isLeaf() {
+            return this.l == null;
+        }
+
     }
 
     public Huffman(String s) {
@@ -45,27 +52,27 @@ public class Huffman {
     }
 
     private void buildHuffmanTree() {
-        PriorityQueue<BinaryTree<TreeNode>> Q = new PriorityQueue<>(freq.size());
+        PriorityQueue<TreeNode> Q = new PriorityQueue<>(freq.size());
         for (Entry<Character, Integer> f : freq.entrySet())
-            Q.insert(new BinaryTree<TreeNode>(new TreeNode(f.getValue(), f.getKey())), f.getValue());
+            Q.insert(new TreeNode(f.getValue(), f.getKey()), f.getValue());
         for (int i = 0; i < dim - 1; i++) {
-            BinaryTree<TreeNode> z1 = Q.deleteMin();
-            BinaryTree<TreeNode> z2 = Q.deleteMin();
-            BinaryTree<TreeNode> z = new BinaryTree<>(new TreeNode(z1.getValue().f + z2.getValue().f, null));
-            z.insertLeft(z1);
-            z.insertRight(z2);
-            Q.insert(z, z.getValue().f);
+            TreeNode z1 = Q.deleteMin();
+            TreeNode z2 = Q.deleteMin();
+            TreeNode z = new TreeNode(z1.f + z2.f, null);
+            z.l = z1;
+            z.r = z2;
+            Q.insert(z, z.f);
         }
         huffmanTree = Q.deleteMin();
     }
 
-    private void setCodes(BinaryTree<TreeNode> t, String s) {
-        if (t.getLeft() == null) {
-            codes.put(t.getValue().c, s);
-            return;
+    private void setCodes(TreeNode t, String s) {
+        if (t.isLeaf()) {
+            codes.put(t.c, s);
+        } else {
+            setCodes(t.l, s + '0');
+            setCodes(t.r, s + '1');
         }
-        setCodes(t.getLeft(), s + '0');
-        setCodes(t.getRight(), s + '1');
     }
 
     public String encode() {
@@ -77,12 +84,12 @@ public class Huffman {
 
     public String decode(String b) {
         String decodedString = "";
-        BinaryTree<TreeNode> root = huffmanTree;
+        TreeNode root = huffmanTree;
         for (int i = 0; i < b.length(); i++) {
             boolean bit = b.charAt(i) == '0';
-            root = bit ? root.getLeft() : root.getRight();
-            if (root.getLeft() == null) {
-                decodedString += root.getValue().c;
+            root = bit ? root.l : root.r;
+            if (root.isLeaf()) {
+                decodedString += root.c;
                 root = huffmanTree;
             }
         }
