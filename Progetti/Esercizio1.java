@@ -1,3 +1,12 @@
+
+/**
+ * Arcara Alessio
+ * 0900061028
+ * alessio.arcara@studio.unibo.it
+ * 
+ * To compile: javac Esercizio1.java
+ * To execute: java Esercizio1
+*/
 import java.util.Random;
 
 class PriorityItem<T> {
