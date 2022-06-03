@@ -4,6 +4,20 @@
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
+ * È stata implementata una PriorityQueue, al posto di usare la struttura dati già presente
+ * nella JDK, poichè si aggiunge l'operazione decrease(), che permette di decrementare la priorità
+ * di un elemento con costo O(log n), invece che rimuovere e reinserire l'elemento con priorità
+ * modificata nella struttura dati nella JDK con costo O(n + log n)=O(n).
+ * 
+ * Lista            Eseguite al max         Costo
+ * ++++++++++++++++++++++++ +++++++ +++++++++++++
+ * + insert ->    O(log n)+ + O(n)+ = O(n log n)+
+ * + find ->          O(1)+ + O(n)+ =       O(n)+
+ * + deleteMin -> O(log n)+ + O(n)+ = O(n log n)+
+ * + decrease ->  O(log n)+ + O(m)+ = O(m log n)+
+ * ++++++++++++++++++++++++ +++++++ +++++++++++++
+ * Costo totale: O(2log n + n + mlog n)= O(m log n)
+ * 
  * To compile: javac Esercizio5.java
  * To execute: java Esercizio5
  */
@@ -233,7 +247,8 @@ class ShortestPath {
             ctot += e.cost;
             System.out.printf("%s %d %d\n", e.type, e.u, e.v);
         }
-        System.out.print(String.format("%.1f", dtot) + "\n" + (ctot != 0 ? (String.format("%.1f", ctot) + "\n") : ""));
+        System.out.print(String.format("%.1f", dtot) + "\n" +
+                (ctot != 0 ? (String.format("%.1f", ctot) + "\n") : ""));
     }
 }
 
