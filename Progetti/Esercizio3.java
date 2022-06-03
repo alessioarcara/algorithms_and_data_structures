@@ -5,20 +5,21 @@
  * alessio.arcara@studio.unibo.it
  * 
  * Algoritmo di Prim, implementato con una LinkedList al posto della coda con priorità,
- * ha complessità O(n^2). Per grafi densi, m è Ω(n^2), la complessità risulta O(n^2 log n) 
- * e l'implementazione con coda con priorità è più lenta di quella proposta.
+ * ha complessità O(n^2). Per grafi densi (come quello dell'esercizio), m è Ω(n^2), 
+ * la complessità risulta O(n^2 log n) e l'implementazione con coda con priorità è più lenta 
+ * di quella proposta.
  * 
  * Inoltre, è stata implementata una LinkedList bidirezionale al posto di utilizzare 
  * la struttura dati già presente nella JDK, poichè migliora il costo dell'operazione remove()
  * da O(n) a O(1).
  * 
  * Lista              Eseguite al max
- * ++++++++++++++++++ ++++++++ +++++++++
- * + insert -> O(1) + + O(n) + = O(n)  +
- * + find -> O(n)   + + O(n) + = O(n^2)+
- * + remove -> O(1) + + O(n) + = O(n)  +
- * + if/elif -> O(1)+ + O(m) + = O(m)  +
- * ++++++++++++++++++ ++++++++ +++++++++
+ * +++++++++++++++++++ ++++++++ +++++++++
+ * + insert ->  O(1) + + O(n) + = O(n)  +
+ * + find ->    O(n) + + O(n) + = O(n^2)+
+ * + remove ->  O(1) + + O(n) + = O(n)  +
+ * + if/elif -> O(1) + + O(m) + = O(m)  +
+ * +++++++++++++++++++ ++++++++ +++++++++
  * Costo totale: O(n^2+2n+m)= O(m)<= O(n^2)
  * 
  * To compile: javac Esercizio3.java
