@@ -4,6 +4,20 @@
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
+ * Come struttura ad accesso diretto è stata usata una coda con priorità, realizzata con uno
+ * heap binario. Poichè la coppia avente la priorità più alta deve essere dapprima eliminata, 
+ * viene usata l'operazione insertAtHead() per sovrascrivere tale coppia con una nuova coppia,
+ * inserendo direttamente in testa e ripristinando successivamente le proprietà heap.
+ * Così facendo, si riduce il massimo numero di confronti da 2*log n a log n.
+ * 
+ * PriorityQueue            
+ * +++++++++++++++++++++++++++
+ * + insert ->       O(log n)+
+ * + insertAtHead -> O(log n)+
+ * + max ->             O(1) +
+ * + deleteMax ->    O(log n)+
+ * +++++++++++++++++++++++++++
+ * 
  * To compile: javac Esercizio1.java
  * To execute: java Esercizio1
 */
@@ -74,10 +88,10 @@ class MaxPriorityQueue {
     }
 
     public PriorityItem insertAtHead(PriorityItem newItem) {
-        PriorityItem item = H[0];
+        PriorityItem oldItem = H[0];
         H[0] = newItem;
         maxHeapRestore(H, 0, dim - 1);
-        return item;
+        return oldItem;
     }
 
     private static void maxHeapRestore(PriorityItem[] arr, int i, int dim) {

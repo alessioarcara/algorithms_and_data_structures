@@ -4,12 +4,12 @@
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
- * È stata implementata una PriorityQueue, al posto di usare la struttura dati già presente
+ * È stata implementata una MinPriorityQueue, al posto di usare la struttura dati già presente
  * nella JDK, poichè si aggiunge l'operazione decrease(), che permette di decrementare la priorità
  * di un elemento con costo O(log n), invece che rimuovere e reinserire l'elemento con priorità
  * modificata con costo O(n + log n)=O(n), necessario nella struttura dati nella JDK.
  * 
- * Lista            Eseguite al max         Costo
+ * PriorityQueue    Eseguite al max         Costo
  * ++++++++++++++++++++++++ +++++++ +++++++++++++
  * + insert ->    O(log n)+ + O(n)+ = O(n log n)+
  * + find ->          O(1)+ + O(n)+ =       O(n)+
