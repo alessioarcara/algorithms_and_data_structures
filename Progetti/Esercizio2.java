@@ -8,10 +8,12 @@
  * To execute: java Esercizio2 <name file>
 */
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Scanner;
 
 class Entry<V> {
@@ -31,62 +33,56 @@ class Entry<V> {
     }
 }
 
-class Hash<V> {
-    private ArrayList<LinkedList<Entry<V>>> lists;
-    int m;
+class HashCalculator {
+    // starting from x, a prime number, x*2 and find nearest prime number and so on;
+    final static int[] primeNumbers = { 17, 37, 79, 158, 331, 673 };
 
-    public Hash(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.m = initialCapacity;
-            this.lists = new ArrayList<>(initialCapacity);
-
-            for (int i = 0; i < m; i++) {
-                this.lists.add(new LinkedList<Entry<V>>());
-            }
-        } else {
-            throw new IllegalArgumentException("Illegal Capacity "
-                    + initialCapacity);
-        }
-    }
-
-    private int hash(String k) {
+    // division method
+    public static int hash(String k, int m) {
         String b = "";
         for (char ch : k.toCharArray()) {
             b += Integer.toBinaryString((int) ch);
         }
         return (int) (Long.parseLong(b, 2) % m);
     }
+}
+
+class HashTable<V> {
+    private ArrayList<LinkedList<Entry<V>>> lists;
+    int n;
+    int m;
+
+    public HashTable(int initialCapacity) {
+        if (initialCapacity > 0) {
+            this.m = (int) Math.pow(2, initialCapacity);
+            this.lists = new ArrayList<>(initialCapacity);
+            for (int i = 0; i < m; i++)
+                this.lists.add(new LinkedList<Entry<V>>());
+        } else {
+            throw new IllegalArgumentException("Illegal Capacity "
+                    + initialCapacity);
+        }
+    }
 
     private Entry<V> find(String k, LinkedList<Entry<V>> list) {
-        Entry<V> eFound = null;
-        for (Entry<V> e : list) {
-            if (e.k == k) {
-                eFound = e;
-                break;
-            }
-        }
-        return eFound;
+        for (Entry<V> e : list)
+            if (e.k.equals(k))
+                return e;
+        return null;
     }
 
     public Entry<V> lookup(String k) {
-        int i = hash(k);
-        Entry<V> e = find(k, lists.get(i));
-        if (e != null) {
-            return e;
-        } else {
-            return null;
-        }
+        return find(k, lists.get(HashCalculator.hash(k, m)));
     }
 
     public void insert(String k, V v) {
-        int i = hash(k);
+        int i = HashCalculator.hash(k, m);
         Entry<V> e = find(k, lists.get(i));
-        if (e == null) {
-            Entry<V> newEntry = new Entry<>(k, v, i);
-            this.lists.get(i).add(newEntry);
-        } else {
+        if (e == null)
+            this.lists.get(i).add(new Entry<>(k, v, i));
+        else
             e.v = v;
-        }
+        n++;
     }
 
     public LinkedList<Entry<V>> list(int hs) {
@@ -106,31 +102,31 @@ class Hash<V> {
  * HashDictionary
  */
 class HashDictionary<V> {
-    Hash<V> hash;
+    HashTable<V> hashTable;
 
     public HashDictionary(int initialCapacity) {
-        hash = new Hash<>(initialCapacity);
+        hashTable = new HashTable<>(initialCapacity);
     }
 
     public void insert(String key, V value) {
-        hash.insert(key, value);
+        hashTable.insert(key, value);
     }
 
     public void lookup(String key) {
-        Entry<V> e = hash.lookup(key);
+        Entry<V> e = hashTable.lookup(key);
         System.out.println(
                 "verifica presenza elemento: input " + key + "; output " + (e != null ? "‘elemento presente’"
                         : "‘elemento non presente’"));
     }
 
     public void printList(int hs) {
-        String listString = hash.list(hs).toString();
+        String listString = hashTable.list(hs).toString();
         System.out.printf("stampa lista in base al valore di hs: input %d output %s\n", hs,
                 listString.substring(1, listString.length() - 1));
     }
 
     public void printListSize(int hs) {
-        System.out.printf("ricerca in base al valore hs: input %d; output %d\n", hs, hash.listSize(hs));
+        System.out.printf("ricerca in base al valore hs: input %d; output %d\n", hs, hashTable.listSize(hs));
     }
 }
 
@@ -138,6 +134,30 @@ class HashDictionary<V> {
  * Esercizio2
  */
 public class Esercizio2 {
+
+    public static void writeFile(String outputf) {
+        try {
+            Random r = new Random();
+            FileWriter f = new FileWriter(outputf);
+
+            final int n = r.nextInt(100);
+            final int m = r.nextInt(n / 10);
+
+            f.write(n + " " + m + "\n");
+
+            for (int i = 1; i <= n; i++) {
+                char newInfo = (char) (r.nextInt('z' - 'a') + 'a');
+                String newKey = "Chiave" + i;
+                final String s = newKey + " " + newInfo + " " + HashCalculator.hash(newKey, m) + "\n";
+                f.write(s);
+            }
+            f.close();
+        } catch (IOException ex) {
+            System.err.println(ex);
+            System.exit(1);
+        }
+    }
+
     public static <V> HashDictionary<Character> readFile(String inputf) {
         Locale.setDefault(Locale.US);
 
@@ -169,6 +189,7 @@ public class Esercizio2 {
             System.exit(1);
         }
 
+        writeFile(args[0]);
         HashDictionary<Character> D = readFile(args[0]);
         D.lookup("Chiave1");
         D.printList(1);

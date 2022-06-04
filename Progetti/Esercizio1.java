@@ -9,49 +9,41 @@
 */
 import java.util.Random;
 
-class PriorityItem<T> {
+class PriorityItem {
     private int priority;
-    private T value;
-    private int pos;
+    private final char value;
 
-    public PriorityItem(int priority, T value, int pos) {
+    public PriorityItem(int priority, char value) {
         this.priority = priority;
         this.value = value;
-        this.pos = pos;
     }
 
-    public static <T> void swap(PriorityItem<T>[] H, int i, int j) {
-        PriorityItem<T> temp = H[i];
+    public static void swap(PriorityItem[] H, int i, int j) {
+        PriorityItem temp = H[i];
         H[i] = H[j];
         H[j] = temp;
-        H[i].pos = i;
-        H[j].pos = j;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public int getPos() {
-        return pos;
-    }
-
-    public T getValue() {
+    public char getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + value + "," + priority + ">";
     }
 }
 
-class PriorityQueue<T> {
+class MaxPriorityQueue {
     private int capacity;
     private int dim;
-    private PriorityItem<T>[] H;
+    private PriorityItem[] H;
 
-    @SuppressWarnings("unchecked")
-    public PriorityQueue(int initialCapacity) {
+    public MaxPriorityQueue(int initialCapacity) {
         if (initialCapacity > 0) {
             this.capacity = initialCapacity;
             this.dim = 0;
@@ -66,9 +58,9 @@ class PriorityQueue<T> {
         return (i - 1) / 2;
     }
 
-    public PriorityItem<T> insert(T x, int p) {
+    public PriorityItem insert(PriorityItem newItem) {
         if (dim < capacity) {
-            H[dim] = new PriorityItem<T>(p, x, dim);
+            H[dim] = newItem;
             int i = dim;
             dim = dim + 1;
             while (i > 0 && H[i].getPriority() > H[p(i)].getPriority()) {
@@ -81,7 +73,14 @@ class PriorityQueue<T> {
         }
     }
 
-    private static <T> void maxHeapRestore(PriorityItem<T>[] arr, int i, int dim) {
+    public PriorityItem insertAtHead(PriorityItem newItem) {
+        PriorityItem item = H[0];
+        H[0] = newItem;
+        maxHeapRestore(H, 0, dim - 1);
+        return item;
+    }
+
+    private static void maxHeapRestore(PriorityItem[] arr, int i, int dim) {
         int l_i = 2 * i + 1;
         int r_i = 2 * i + 2;
         int max = i;
@@ -95,74 +94,49 @@ class PriorityQueue<T> {
         }
     }
 
-    public T deleteMax() {
+    public PriorityItem deleteMax() {
         if (dim > 0) {
             PriorityItem.swap(H, 0, dim - 1);
             dim--;
             maxHeapRestore(H, 0, dim - 1);
-            return H[dim].getValue();
+            return H[dim];
         } else {
             throw new IllegalStateException("PriorityQueue is empty");
         }
     }
 
-    public T max() {
+    public PriorityItem max() {
         if (dim > 0) {
-            return H[0].getValue();
+            return H[0];
         } else {
             throw new IllegalStateException("PriorityQueue is empty");
         }
     }
 
-    public void printAll() {
+    public void printState() {
         StringBuffer sb = new StringBuffer();
-        for (PriorityItem<T> priorityItem : H)
-            sb.append("<" + priorityItem.getValue() + ", " + priorityItem.getPriority() + ">, ");
-        System.out.println(sb.substring(0, sb.length() - 2).toString());
+        for (int i = 0; i < dim; i++)
+            sb.append(H[i] + (i < dim - 1 ? ", " : ""));
+        System.out.println("S=" + sb);
     }
 }
 
 class Sensor {
-
-    final Random random;
-    final long seed = 3131123;
-
-    public class Data {
-        private char info;
-        private int priority;
-
-        private Data(char info, int priority) {
-            this.info = info;
-            this.priority = priority;
-        }
-
-        public char getInfo() {
-            return info;
-        }
-
-        public void setInfo(char info) {
-            this.info = info;
-        }
-
-        public int getPriority() {
-            return priority;
-        }
-
-        public void setPriority(int priority) {
-            this.priority = priority;
-        }
-    }
+    private final static long seed = 900061028L;
+    private final Random random;
+    private final static int UPPER_LIMIT = 100;
+    private final static int LOWER_LIMIT = 1;
 
     public Sensor() {
         random = new Random(seed);
     }
 
-    public Data generateData(boolean verbose) {
-        char newInfo = (char) (random.nextInt('z' - 'a') + 'a');
-        int newPriority = random.nextInt(100);
+    public PriorityItem generateData(boolean verbose) {
+        final char newInfo = (char) (random.nextInt('z' - 'a') + 'a');
+        final int newPriority = random.nextInt(UPPER_LIMIT) + LOWER_LIMIT;
         if (verbose)
-            System.out.println(String.format("Viene generata la coppia: <%s, %s>", newInfo, newPriority));
-        return new Data(newInfo, newPriority);
+            System.out.printf("viene generata la coppia: <%s, %s>\n", newInfo, newPriority);
+        return new PriorityItem(newPriority, newInfo);
     }
 
     public long getSeed() {
@@ -171,24 +145,19 @@ class Sensor {
 }
 
 public class Esercizio1 {
-
     // 8 + 8 ultima cifra matricola
     final static int K = 16;
 
     public static void main(String[] args) {
-        PriorityQueue<Character> S = new PriorityQueue<>(K);
+        MaxPriorityQueue S = new MaxPriorityQueue(K);
         Sensor sensor = new Sensor();
 
-        for (int i = 0; i < K; i++) {
-            Sensor.Data data = sensor.generateData(false);
-            S.insert(data.getInfo(), data.getPriority());
-        }
+        for (int i = 0; i < K; i++)
+            S.insert(sensor.generateData(false));
 
-        System.out.println(String.format("K=%s, seme=%s", K, sensor.getSeed()));
-        S.printAll();
-        S.deleteMax();
-        Sensor.Data data = sensor.generateData(true);
-        S.insert(data.getInfo(), data.getPriority());
-        S.printAll();
+        System.out.println(String.format("K=%s, seme=%s;", K, sensor.getSeed()));
+        S.printState();
+        S.insertAtHead(sensor.generateData(true));
+        S.printState();
     }
 }

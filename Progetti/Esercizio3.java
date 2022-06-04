@@ -12,7 +12,7 @@
  * la struttura dati già presente nella JDK, poichè migliora il costo dell'operazione remove()
  * da O(n) a O(1).
  * 
- * Lista              Eseguite al max
+ * Lista        Eseguite al max     Costo
  * +++++++++++++++++++ ++++++++ +++++++++
  * + insert ->  O(1) + + O(n) + = O(n)  +
  * + find ->    O(n) + + O(n) + = O(n^2)+
@@ -199,7 +199,7 @@ class MST {
         L.append(new Pair<>(s, 0));
 
         while (!L.isEmpty()) {
-            int u = MST.deleteMin(L);
+            final int u = MST.deleteMin(L);
             added[u] = true;
             LinkedList<Edge> adjL = adjLists.get(u);
             Node<Edge> n = adjL.head();

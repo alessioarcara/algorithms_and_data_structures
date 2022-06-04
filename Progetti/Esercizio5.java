@@ -7,7 +7,7 @@
  * È stata implementata una PriorityQueue, al posto di usare la struttura dati già presente
  * nella JDK, poichè si aggiunge l'operazione decrease(), che permette di decrementare la priorità
  * di un elemento con costo O(log n), invece che rimuovere e reinserire l'elemento con priorità
- * modificata nella struttura dati nella JDK con costo O(n + log n)=O(n).
+ * modificata con costo O(n + log n)=O(n), necessario nella struttura dati nella JDK.
  * 
  * Lista            Eseguite al max         Costo
  * ++++++++++++++++++++++++ +++++++ +++++++++++++
@@ -31,7 +31,7 @@ import java.util.Stack;
 
 class PriorityItem {
     private double priority;
-    private int value;
+    private final int value;
     private int pos;
 
     public PriorityItem(double priority, int value, int pos) {
@@ -65,12 +65,12 @@ class PriorityItem {
     }
 }
 
-class PriorityQueue {
+class MinPriorityQueue {
     private int capacity;
     private int dim;
     private PriorityItem[] H;
 
-    public PriorityQueue(int initialCapacity) {
+    public MinPriorityQueue(int initialCapacity) {
         if (initialCapacity > 0) {
             this.capacity = initialCapacity;
             this.dim = 0;
@@ -142,6 +142,8 @@ class PriorityQueue {
 }
 
 class ShortestPath {
+    public static final char ZIPLINE = 't';
+    public static final char FOOT = 'p';
     int src;
     int n;
     ArrayList<LinkedList<Edge>> adjLists;
@@ -180,9 +182,8 @@ class ShortestPath {
 
             adjLists = new ArrayList<LinkedList<Edge>>(n);
 
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++)
                 adjLists.add(i, new LinkedList<Edge>());
-            }
 
             for (int i = 0; i < m; i++) {
                 final char type = f.next().charAt(0);
@@ -191,9 +192,9 @@ class ShortestPath {
                 final double length = f.nextDouble();
                 double cost = 0;
 
-                if (type == 't') {
+                if (type == ZIPLINE)
                     cost = f.nextDouble();
-                }
+
                 adjLists.get(u).add(new Edge(u, v, length, type, cost));
             }
         } catch (IOException ex) {
@@ -207,7 +208,7 @@ class ShortestPath {
         PriorityItem[] d = new PriorityItem[n];
         p = new int[n];
         boolean[] visited = new boolean[n];
-        PriorityQueue Q = new PriorityQueue(n);
+        MinPriorityQueue Q = new MinPriorityQueue(n);
 
         for (int v = 0; v < n; v++) {
             d[v] = Q.insert(v, (s == v ? 0.0 : Double.POSITIVE_INFINITY));
@@ -221,13 +222,12 @@ class ShortestPath {
             for (Edge edge : adjLists.get(u)) {
                 final int v = edge.v;
                 final double sum = d[u].getPriority() + edge.w;
-                if (byZipline || edge.type == 'p') {
+                if (byZipline || edge.type == FOOT)
                     if (!visited[v] && sum < d[v].getPriority()) {
                         Q.decrease(d[v], sum);
                         sp[v] = edge;
                         p[v] = u;
                     }
-                }
             }
         }
     }
