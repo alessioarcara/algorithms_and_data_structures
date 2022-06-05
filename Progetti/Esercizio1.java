@@ -23,17 +23,17 @@
 */
 import java.util.Random;
 
-class PriorityItem {
+class PriorityItem<T> {
     private int priority;
-    private final char value;
+    private final T value;
 
-    public PriorityItem(int priority, char value) {
+    public PriorityItem(int priority, T value) {
         this.priority = priority;
         this.value = value;
     }
 
-    public static void swap(PriorityItem[] H, int i, int j) {
-        PriorityItem temp = H[i];
+    public static <T> void swap(PriorityItem<T>[] H, int i, int j) {
+        PriorityItem<T> temp = H[i];
         H[i] = H[j];
         H[j] = temp;
     }
@@ -42,7 +42,7 @@ class PriorityItem {
         return priority;
     }
 
-    public char getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -52,16 +52,18 @@ class PriorityItem {
     }
 }
 
-class MaxPriorityQueue {
+class MaxPriorityQueue<T> {
     private int capacity;
     private int dim;
-    private PriorityItem[] H;
+    private PriorityItem<T>[] H;
 
     public MaxPriorityQueue(int initialCapacity) {
         if (initialCapacity > 0) {
             this.capacity = initialCapacity;
             this.dim = 0;
-            this.H = new PriorityItem[initialCapacity];
+            @SuppressWarnings("unchecked")
+            final PriorityItem<T>[] H = new PriorityItem[initialCapacity];
+            this.H = H;
         } else {
             throw new IllegalArgumentException("Illegal Capacity "
                     + initialCapacity);
@@ -72,7 +74,7 @@ class MaxPriorityQueue {
         return (i - 1) / 2;
     }
 
-    public PriorityItem insert(PriorityItem newItem) {
+    public PriorityItem<T> insert(PriorityItem<T> newItem) {
         if (dim < capacity) {
             H[dim] = newItem;
             int i = dim;
@@ -87,14 +89,15 @@ class MaxPriorityQueue {
         }
     }
 
-    public PriorityItem insertAtHead(PriorityItem newItem) {
-        PriorityItem oldItem = H[0];
+    public PriorityItem<T> insertAtHead(PriorityItem<T> newItem) {
+        PriorityItem<T> oldItem = H[0];
+        System.out.printf("viene eliminata la coppia: %s\n", oldItem.toString());
         H[0] = newItem;
         maxHeapRestore(H, 0, dim - 1);
         return oldItem;
     }
 
-    private static void maxHeapRestore(PriorityItem[] arr, int i, int dim) {
+    private static <T> void maxHeapRestore(PriorityItem<T>[] arr, int i, int dim) {
         int l_i = 2 * i + 1;
         int r_i = 2 * i + 2;
         int max = i;
@@ -108,7 +111,7 @@ class MaxPriorityQueue {
         }
     }
 
-    public PriorityItem deleteMax() {
+    public PriorityItem<T> deleteMax() {
         if (dim > 0) {
             PriorityItem.swap(H, 0, dim - 1);
             dim--;
@@ -119,7 +122,7 @@ class MaxPriorityQueue {
         }
     }
 
-    public PriorityItem max() {
+    public PriorityItem<T> max() {
         if (dim > 0) {
             return H[0];
         } else {
@@ -138,19 +141,19 @@ class MaxPriorityQueue {
 class Sensor {
     private final static long seed = 900061028L;
     private final Random random;
-    private final static int UPPER_LIMIT = 100;
-    private final static int LOWER_LIMIT = 1;
+    private final static int UPPER_BOUND = 100;
+    private final static int LOWER_BOUND = 1;
 
     public Sensor() {
         random = new Random(seed);
     }
 
-    public PriorityItem generateData(boolean verbose) {
+    public PriorityItem<Character> generateData(boolean verbose) {
         final char newInfo = (char) (random.nextInt('z' - 'a') + 'a');
-        final int newPriority = random.nextInt(UPPER_LIMIT) + LOWER_LIMIT;
+        final int newPriority = random.nextInt((UPPER_BOUND - LOWER_BOUND) + 1) + LOWER_BOUND;
         if (verbose)
-            System.out.printf("viene generata la coppia: <%s, %s>\n", newInfo, newPriority);
-        return new PriorityItem(newPriority, newInfo);
+            System.out.printf("viene generata la coppia: <%s,%s>\n", newInfo, newPriority);
+        return new PriorityItem<>(newPriority, newInfo);
     }
 
     public long getSeed() {
@@ -163,7 +166,7 @@ public class Esercizio1 {
     final static int K = 16;
 
     public static void main(String[] args) {
-        MaxPriorityQueue S = new MaxPriorityQueue(K);
+        MaxPriorityQueue<Character> S = new MaxPriorityQueue<>(K);
         Sensor sensor = new Sensor();
 
         for (int i = 0; i < K; i++)
