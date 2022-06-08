@@ -4,7 +4,9 @@
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
- * 
+ * Si è realizzato il dizionario e una tabella hash sottostante con:
+ * - funzione hash -> metodo della divisione
+ * - gestione delle collisioni -> liste di trabocco
  * 
  * To compile: javac Esercizio2.java
  * To execute: java Esercizio2 <name file>
@@ -204,8 +206,8 @@ public class Esercizio2 {
         }
         // writeFile(args[0]);
         HashDictionary<Character> D = readFile(args[0]);
-        D.lookup("Chiave1", 'b', 19);
-        D.lookup("Chiave101", 'a', 13);
+        D.lookup("Chiave1", 'a', 1);
+        D.lookup("Chiave101", 'a', 1);
         D.printList(0);
         D.printListSize(0);
     }
