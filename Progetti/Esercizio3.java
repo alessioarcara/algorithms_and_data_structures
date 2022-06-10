@@ -125,8 +125,7 @@ class MST {
 
         public int opposite(int v) {
             assert ((u == v) || (this.v == v));
-
-            return (v == u ? v : u);
+            return (v == u ? this.v : u);
         }
     }
 
@@ -155,7 +154,7 @@ class MST {
             }
 
             for (int i = 0; i < locations.length; i++)
-                for (int j = 0; j < locations.length; j++)
+                for (int j = i + 1; j < locations.length; j++)
                     if (i != j) {
                         final double dist = Math.sqrt(Math.pow(locations[i].x - locations[j].x, 2)
                                 + Math.pow(locations[i].y - locations[j].y, 2));

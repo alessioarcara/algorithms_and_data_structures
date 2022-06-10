@@ -1,80 +1,76 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Arcara Alessio
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
+ * esempio: 
+ * 00010010
+ * 
+ * formula: sum(F(i-j))
+ * sommatoria di tutte le codifiche di lunghezza j che terminano nella stringa di lunghezza i
+ * F(0) = 1
+ * F(1) = F(0)
+ * 
  * To compile: javac Esercizio4.java
  * To execute: java Esercizio4 <binary string>
  */
 
-public class Esercizio4 {
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 
-    public static int count_iter(String S, HashMap<String, Integer> codes) {
+class CountEncodings {
+    List<String> encodings = List.of("0", "00", "001", "010", "0010", "0100", "0110", "0001");
+    int MAX_LENGTH;
+    String s;
 
-        // codes.put(S.char, value)
-
-        for (int i = 4; i < S.length(); i++) {
-            if (codes.containsKey(S.substring(i - 4, i - 3))) {
-                System.out.println();
-            }
-            if (codes.containsKey(S.substring(i - 4, i))) {
-            }
-        }
-        return 0;
+    public CountEncodings(String inputf) {
+        readFile(inputf);
     }
 
-    // public static int count(String S, List<String> letters, HashMap<String,
-    // Integer> DP) {
-    // if (S.isEmpty()) {
-    // return 1;
-    // }
-    // if (DP.containsKey(S)) {
-    // return DP.get(S);
-    // }
-    // int sum = 0;
-
-    // for (String letter : letters) {
-    // if (S.startsWith(letter)) {
-    // System.out.println(S.substring(letter.length()));
-    // sum += count(S.substring(letter.length()), letters, DP);
-    // }
-    // }
-    // DP.put(S, sum);
-    // return sum;
-    // }
-
-    // public static int count_driver(String S) {
-    // List<String> letters = List.of("0", "00", "001", "010", "0010", "0100",
-    // "0110", "0001");
-    // return count(S, letters, new HashMap<>());
-    // }
-
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: java Esercizio5 <binary string>");
+    private void readFile(String inputf) {
+        Locale.setDefault(Locale.US);
+        try {
+            Scanner f = new Scanner(new FileReader(inputf));
+            s = f.nextLine();
+        } catch (IOException ex) {
+            System.err.println(ex);
             System.exit(1);
         }
+    }
 
-        HashMap<String, Integer> codes = new HashMap<>() {
-            {
-                put("0", 0);
-                put("00", 0);
-                put("001", 0);
-                put("010", 0);
-                put("0010", 0);
-                put("0100", 0);
-                put("0110", 0);
-                put("0001", 0);
-            }
-        };
+    public int count() {
+        int n = s.length();
 
-        // System.out.println(count("1111", codes, new HashMap<>())); // DP
+        int f[] = new int[n + 1];
+        f[0] = 1; // "" empty string
 
-        System.out.println(count_iter(args[0], codes));
-        // numberOfAmbiguosDecodings(args[0], 0, args[0].length() - 1);
+        for (int i = 1; i < n + 1; i++) {
+            int sum = 0;
+            String s_i = s.substring(0, i);
+            for (String encoding : encodings)
+                if (s_i.endsWith(encoding))
+                    sum += f[i - encoding.length()];
+            f[i] = sum;
+        }
+        System.out.println(Arrays.toString(f));
+        return f[n];
+    }
+
+}
+
+public class Esercizio4 {
+    public static void main(String[] args) {
+
+        if (args.length != 1) {
+            System.err.println("Usage: java Esercizio5 <file name>");
+            System.exit(1);
+        }
+        CountEncodings c = new CountEncodings(args[0]);
+        System.out.println(c.count());
     }
 }
