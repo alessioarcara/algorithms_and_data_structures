@@ -56,7 +56,7 @@ public class Kruskal {
         }
     }
 
-    private class Edge implements Comparable {
+    private class Edge implements Comparable<Object> {
         public final int u;
         public final int v;
         public final double w;
