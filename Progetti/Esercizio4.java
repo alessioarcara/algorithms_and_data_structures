@@ -18,14 +18,14 @@
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 class CountEncodings {
-    List<String> encodings = List.of("0", "00", "001", "010", "0010", "0100", "0110", "0001");
-    int MAX_LENGTH;
+    final List<String> ENCODINGS = List.of("0", "00", "001", "010", "0010", "0100", "0110", "0001");
+    final int N = ENCODINGS.stream().max(Comparator.comparingInt(String::length)).get().length();;
     String s;
 
     public CountEncodings(String inputf) {
@@ -44,21 +44,20 @@ class CountEncodings {
     }
 
     public int count() {
-        int n = s.length();
+        int f[] = new int[N]; // max length of longest encoding
+        f[0] = 1; // caso base -> "" empty string
 
-        int f[] = new int[n + 1];
-        f[0] = 1; // "" empty string
-
-        for (int i = 1; i < n + 1; i++) {
+        int idx = 1;
+        for (int i = 1; i <= s.length(); i++) {
             int sum = 0;
             String s_i = s.substring(0, i);
-            for (String encoding : encodings)
+            for (String encoding : ENCODINGS) {
                 if (s_i.endsWith(encoding))
-                    sum += f[i - encoding.length()];
-            f[i] = sum;
+                    sum += f[(i - encoding.length()) % N];
+            }
+            f[idx = i % N] = sum;
         }
-        System.out.println(Arrays.toString(f));
-        return f[n];
+        return f[idx];
     }
 
 }
