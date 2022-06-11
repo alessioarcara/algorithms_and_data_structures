@@ -16,7 +16,7 @@
  * 
  * A questo punto, come calcolare le sottosoluzioni?
  * - CASO BASE: lunghezza stringa 0, una stringa vuota corrisponde a una codifica -> 1
- * - CASO GENERALE: lunghezza stringa i<=1<=n, se alla stringa di lunghezza i tolgo una codifica di lunghezza j che termina 
+ * - CASO GENERALE: lunghezza stringa 1<=i<=n, se alla stringa di lunghezza i tolgo una codifica di lunghezza j che termina 
  *                  esattamente nel carattere i-esimo, cosa rimane? Una stringa di lunghezza i-j, ma questo non è altro che
  *                  un sottoproblema P(i-j) che abbiamo già risolto. Quindi, la sottosoluzione è la somma dei sottoproblemi 
  *                  rimanenti delle codifiche che terminano nell'i-esimo carattere.
