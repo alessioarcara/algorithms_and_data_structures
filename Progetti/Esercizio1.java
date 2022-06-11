@@ -14,7 +14,7 @@
  * +++++++++++++++++++++++++++
  * + insert ->       O(log n)+
  * + insertAtHead -> O(log n)+
- * + max ->             O(1) +
+ * + max ->              O(1)+
  * + deleteMax ->    O(log n)+
  * +++++++++++++++++++++++++++
  * 
@@ -139,12 +139,13 @@ class MaxPriorityQueue<T> {
 }
 
 class Sensor {
-    private final static long seed = 900061028L;
-    private final Random random;
     private final static int UPPER_BOUND = 100;
     private final static int LOWER_BOUND = 1;
+    private Random random;
+    private long seed;
 
-    public Sensor() {
+    public Sensor(long seed) {
+        this.seed = seed;
         random = new Random(seed);
     }
 
@@ -159,6 +160,11 @@ class Sensor {
     public long getSeed() {
         return seed;
     }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
+        this.random.setSeed(seed);
+    }
 }
 
 public class Esercizio1 {
@@ -167,14 +173,18 @@ public class Esercizio1 {
 
     public static void main(String[] args) {
         MaxPriorityQueue<Character> S = new MaxPriorityQueue<>(K);
-        Sensor sensor = new Sensor();
+        Sensor sensor = new Sensor(900061028L);
 
+        // Popolamento struttura dati S
         for (int i = 0; i < K; i++)
             S.insert(sensor.generateData(false));
-
         System.out.println(String.format("K=%s, seme=%s;", K, sensor.getSeed()));
         S.printState();
-        S.insertAtHead(sensor.generateData(true));
+
+        // K operazioni di cancellazione/inserimento
+        sensor.setSeed(3131123L);
+        for (int i = 0; i < K; i++)
+            S.insertAtHead(sensor.generateData(true));
         S.printState();
     }
 }

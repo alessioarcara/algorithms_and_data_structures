@@ -8,8 +8,44 @@
  * - funzione hash -> metodo della divisione
  * - gestione delle collisioni -> liste di trabocco
  * 
+ * Per specifiche dell'esercizio il valore hash della chiave k viene letto alla lettura del file 
+ * e congruentemente tutte le operazioni presuppongono che venga fornito il valore hash corretto [0,K-1].
+ * 
+ * Le chiavi con lo stesso valore hash vengono memorizzate in una lista: 
+ * - l'operazione lookup scandaglia la lista per cercare l'elemento con quella chiave
+ * - l'operazione insert scandaglia la lista per controllare se l'elemento è già presente
+ * 
+ * Servendosi del valore hash come indice del vettore, si accede alla lista in tempo Θ(1):
+ * La ricerca senza successo tocca tutte le chiavi della lista corrispondente -> α
+ * La ricerca con successo tocca in media metà delle chiavi nella lista corrispondente -> α/2
+ *
+ * Assumendo l'utilizzo di una buona funzione hash, e che dunque le chiavi vengono distribuite uniformemente,
+ * le liste di trabocco avranno lunghezza pari al fattore di carico α, con α=N/K.
+ * 
+ * Pertanto, possiamo dire che il numero medio di accessi per lookup sarà Θ(1) + α
+ * e che il numero di accessi per listsize sarà Θ(1).
+ * 
+ * Dizionario            
+ * +++++++++++++++++++++++++++
+ * + insert ->         O(1)+α+
+ * + lookup ->         O(1)+α+
+ * + list ->             O(1)+
+ * + listsize ->         O(1)+
+ * +++++++++++++++++++++++++++
+ * 
+ * Nota: per scelta, non si verifica se il valore info della tripla in input è uguale al valore info della tripla trovata. 
+ * Nota2: mediante la procedura write è possibile generare un file contenente i valori N,K e le triple <key, value, hs>.
+ * 
  * To compile: javac Esercizio2.java
- * To execute: java Esercizio2 <name file>
+ * To execute: java Esercizio2 <file name> <operation>
+ * 
+ * Possible operations            
+ * --------------------------------------------------------------------------------------------------
+ * - lookup <key> <value> <hs>     -> example: java Esercizio2.java triplets.txt lookup Chiave1 a 5 -
+ * - list <hs>                                 -> example: java Esercizio2.java triplets.txt list 1 -
+ * - listsize <hs>                         -> example: java Esercizio2.java triplets.txt listsize 1 -
+ * - write (to make a file containing triplets) -> example: java Esercizio2.java triplets.txt write -
+ * --------------------------------------------------------------------------------------------------
 */
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -50,8 +86,8 @@ class HashCalculator {
 
 class HashTable<V> {
     private LinkedList<Entry<V>>[] lists;
-    int n;
-    int m;
+    private int n;
+    private int m;
 
     public HashTable(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -110,6 +146,10 @@ class HashTable<V> {
     public int listSize(int hs) {
         return lists[hs].size();
     }
+
+    public int getM() {
+        return m;
+    }
 }
 
 class HashDictionary<V> {
@@ -119,11 +159,24 @@ class HashDictionary<V> {
         hashTable = new HashTable<>(initialCapacity);
     }
 
+    // guard
+    private boolean isValidHs(int hs) {
+        if (hs < 0 || hs > hashTable.getM() - 1) {
+            System.err.printf("* hs must be >= 0 and < %d !! *\n", hashTable.getM());
+            return false;
+        }
+        return true;
+    };
+
     public void insert(String key, V value, int hs) {
+        if (!isValidHs(hs))
+            return;
         hashTable.insert(key, value, hs);
     }
 
     public void lookup(String key, V value, int hs) {
+        if (!isValidHs(hs))
+            return;
         Entry<V> e = hashTable.lookup(key, hs);
         System.out
                 .println(String.format("verifica presenza elemento: input <%s, %s, %d>; output ", key, value, hs)
@@ -132,12 +185,16 @@ class HashDictionary<V> {
     }
 
     public void printList(int hs) {
+        if (!isValidHs(hs))
+            return;
         String listString = hashTable.list(hs).toString();
         System.out.printf("stampa lista in base al valore di hs: input %d output %s\n", hs,
                 listString.substring(1, listString.length() - 1));
     }
 
     public void printListSize(int hs) {
+        if (!isValidHs(hs))
+            return;
         System.out.printf("ricerca in base al valore hs: input %d; output %d\n", hs, hashTable.listSize(hs));
     }
 }
@@ -147,6 +204,10 @@ public class Esercizio2 {
     private final static int UPPER_BOUND = 100;
     private final static int LOWER_BOUND = 50;
     private final static int BIT_LENGTH = 5;
+    public static final String LOOKUP = "lookup";
+    public static final String LIST = "list";
+    public static final String LISTSIZE = "listsize";
+    public static final String WRITE = "write";
 
     /*
      * method for make a file containing values N, K and triplets <key, value, hs>
@@ -199,16 +260,48 @@ public class Esercizio2 {
         return null;
     }
 
+    public static void printError() {
+        System.err.println("Usage: java Esercizio2 <file name> <operation> [operation options]");
+        System.err.println("++++ [operation options] ++++");
+        System.err.println("- lookup <key> <value> <hs>");
+        System.err.println("- list <hs>");
+        System.err.println("- listsize <hs>");
+        System.err.println("- write");
+        System.err.println("+++++++++++++++++++++++++++++");
+        System.err.println("Please specify all arguments on the command line.");
+    }
+
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: java Esercizio2 <file name>");
-            System.exit(1);
+        try {
+            HashDictionary<Character> D = readFile(args[0]);
+            final int hs;
+            switch (args[1].toLowerCase()) {
+                case LOOKUP:
+                    final String key = args[2];
+                    final char value = args[3].charAt(0);
+                    hs = Integer.parseInt(args[4]);
+                    D.lookup(key, value, hs);
+                    break;
+                case LIST:
+                    hs = Integer.parseInt(args[2]);
+                    D.printList(hs);
+                    break;
+                case LISTSIZE:
+                    hs = Integer.parseInt(args[2]);
+                    D.printListSize(hs);
+                    break;
+                case WRITE:
+                    writeFile(args[0]);
+                    break;
+                default:
+                    printError();
+                    break;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printError();
+        } catch (NumberFormatException e) {
+            System.err.println("hs must be an integer !!");
         }
-        // writeFile(args[0]);
-        HashDictionary<Character> D = readFile(args[0]);
-        D.lookup("Chiave1", 'a', 1);
-        D.lookup("Chiave101", 'a', 1);
-        D.printList(0);
-        D.printListSize(0);
+        System.exit(1);
     }
 }

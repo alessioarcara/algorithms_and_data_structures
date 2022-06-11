@@ -4,16 +4,49 @@
  * 0900061028
  * alessio.arcara@studio.unibo.it
  * 
- * esempio: 
- * 00010010
+ * L'algoritmo da me proposto, basato sulla programmazione dinamica, segue il seguente schema:
+ * ------------------------------------------------------ Sottoproblemi ------------------------------------------------------
+ * - contare le codifiche che terminano esattamente nell'ultimo carattere di una stringa di lunghezza i, con 0<=i<=n         -
+ * -----------------------------------------------------  Sottosoluzioni -----------------------------------------------------
+ * - la somma del numero di codifiche presenti in una stringa di lunghezza i                                                 -
+ * ------------------------------------------------------ Soluzione al problema di partenza ----------------------------------
+ * - supponendo di aver calcolato tutte le sottosoluzioni f[i], la soluzione al problema di partenza, cioè contare il numero -
+ * - di codifiche presenti in una stringa di lunghezza i=n, corrisponde alla sottosoluzione f[n]                             -
+ * ---------------------------------------------------------------------------------------------------------------------------
  * 
- * formula: sum(F(i-j))
- * sommatoria di tutte le codifiche di lunghezza j che terminano nella stringa di lunghezza i
- * F(0) = 1
- * F(1) = F(0)
+ * A questo punto, come calcolare le sottosoluzioni?
+ * - CASO BASE: lunghezza stringa 0, una stringa vuota corrisponde a una codifica -> 1
+ * - CASO GENERALE: lunghezza stringa i<=1<=n, se alla stringa di lunghezza i tolgo una codifica di lunghezza j che termina 
+ *                  esattamente nel carattere i-esimo, cosa rimane? Una stringa di lunghezza i-j, ma questo non è altro che
+ *                  un sottoproblema P(i-j) che abbiamo già risolto. Quindi, la sottosoluzione è la somma dei sottoproblemi 
+ *                  rimanenti delle codifiche che terminano nell'i-esimo carattere.
+ *
+ * FORMULA GENERALE: sum(P(i-j) per ogni codifica k che termina esattamente nell'i-esimo carattere della stringa di lunghezza i)
+ * con i = lunghezza stringa, j = lunghezza codifica. stringa: "0001", codifica: "001" -> 4 - 3 = 1
+ * 
+ * Ispirato dall'esempio di Fibonacci, non si è memorizzato un vettore di n posizioni, ma solo un vettore di lunghezza pari
+ * alla codifica più lunga, che nell'esercizio è pari a 4. Infatti, per come spiegato nel caso generale, si potrà tornare al 
+ * più al sottoproblema P(i-4).
+ * 
+ * esempio: 
+ * S=00100, K=[0,00,001,010,0010, 0100, 0110, 0001]
+ * P(0) = 1
+ * P(1) = P(0) = 1
+ * P(2) = P(1) + P(0) = 2
+ * P(3) = P(0) = 1
+ * P(4) = P(3) + P(1) + P(0) = 3
+ * P(5) = P(4) + P(3) + P(1) = 5
+ * 
+ *  Algoritmo            
+ * +++++++++++++++++++++++++++++++
+ * + time ->    O(n*n+n*k)=O(n^2)+
+ * + space ->                O(1)+
+ * +++++++++++++++++++++++++++++++
+ * k: numero codifiche.
+ * n*n: Dalla versione Java 7 update 6, substring ha complessità O(n).
  * 
  * To compile: javac Esercizio4.java
- * To execute: java Esercizio4 <binary string>
+ * To execute: java Esercizio4 <file name>
  */
 
 import java.io.FileReader;
@@ -59,12 +92,10 @@ class CountEncodings {
         }
         return f[idx];
     }
-
 }
 
 public class Esercizio4 {
     public static void main(String[] args) {
-
         if (args.length != 1) {
             System.err.println("Usage: java Esercizio5 <file name>");
             System.exit(1);

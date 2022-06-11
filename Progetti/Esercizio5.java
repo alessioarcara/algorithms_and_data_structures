@@ -9,8 +9,6 @@
  * di un elemento con costo O(log n), invece che rimuovere e reinserire l'elemento con priorità
  * modificata con costo O(n + log n)=O(n), necessario nella struttura dati nella JDK.
  * 
- * Nota: 
- * 
  * PriorityQueue    Eseguite al max         Costo
  * ++++++++++++++++++++++++ +++++++ +++++++++++++
  * + insert ->    O(log n)+ + O(n)+ = O(n log n)+
@@ -205,6 +203,10 @@ class ShortestPath {
         }
     }
 
+    /*
+     * se il parametro booleano byZipline è true, si considerano tutti gli archi,
+     * altrimenti si considerano solo gli archi di tipo 'p'
+     */
     private void dijkstra(int s, boolean byZipline) {
         sp = new Edge[n];
         PriorityItem[] d = new PriorityItem[n];
