@@ -6,7 +6,7 @@ interface Callable {
 
 public class Main {
 
-    void calcTime(Callable func, String sortName) {
+    public void calcTime(Callable func, String sortName) {
         long start_t, end_t, elapsed, min;
         double sec;
         start_t = System.currentTimeMillis();

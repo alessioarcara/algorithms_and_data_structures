@@ -212,7 +212,7 @@ class MST {
                         p[v] = u;
                         mst[v] = edge;
                         wtot += d[v];
-                        L.append(new Pair<>(v, w));
+                        L.append(new Pair<>(v, d[v]));
                     } else if (w < d[v]) {
                         wtot -= d[v];
                         d[v] = w;
